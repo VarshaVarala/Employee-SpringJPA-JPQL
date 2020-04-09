@@ -12,9 +12,7 @@ import com.pdw.entity.Employee;
 @Repository
 public interface EmployeeDao extends JpaRepository<Employee,Integer> {
 	
-	@Query("select * from Employee where ename=?1")
-	List<Employee>findByename(@Param("c") String name);
-	
+	// user defined query
 	@Query("select ename,esal from Employee where esal>100")
 	List<Employee>GreaterThan100();
 

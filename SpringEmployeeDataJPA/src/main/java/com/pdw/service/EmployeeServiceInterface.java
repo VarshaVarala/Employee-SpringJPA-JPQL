@@ -12,8 +12,7 @@ public interface EmployeeServiceInterface {
 
 	    String createEmployee(Employee employee);
 	    List<Employee> findAllEmployees();
-	    String deleteEmployee(int id);
-	    List<Employee> findByename(String ename);
+	    String deleteEmployee(int eid);
 List<Employee>GreaterThan100();
 	    String updateEmployee(Employee employee);
 

@@ -33,21 +33,15 @@ public class EmployeeService implements EmployeeServiceInterface {
 	}
 
 	@Override
-	public String deleteEmployee(int id) {
-		boolean result=empDao.exists(id);
+	public String deleteEmployee(int eid) {
+		boolean result=empDao.exists(eid);
 		if(result) {
-			empDao.delete(id);
+			empDao.delete(eid);
 			return "deleted successfully!";
 		}
 		else
 		return "Employee doesn't exists";
 	}
-
-	@Override
-	public List<Employee> findByename(String name) {
-		return empDao.findByename(name);
-	}
-
 	@Override
 	public String updateEmployee(Employee employee) {
 		boolean result=empDao.exists(employee.getEid());

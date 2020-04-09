@@ -3,9 +3,11 @@ package com.pdw.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.pdw.service.EmployeeService;
 import com.pdw.entity.*;
+import com.pdw.exceptions.BasicIdException;
 
 @RestController
 @RequestMapping("/bank")
@@ -14,15 +16,17 @@ public class EmployeeRestController {
 			    @Autowired
 			    EmployeeService employeeService;
 
-			    @GetMapping("/findEmployeeById/{eid}")
-			    public Employee findEmployeeById(@PathVariable("eid") int id) {
-			        Employee employee = employeeService.findEmployeeById(id);
-			        if (employee == null) {
-			        System.out.println("employee not found for id=" + id);
-			        }
-			         return employeeService.findEmployeeById(id);
-			    }
-
+			    @RequestMapping(value = "/findEmployeeWithId{id}",method = RequestMethod.GET,headers="Accept=application/json")
+				public Employee findEmployeeByIdCounty(@PathVariable int id) throws BasicIdException{
+					Employee c =null;
+					try {
+						c = employeeService.findEmployeeById(id);
+						System.out.println("country"+c);
+					}catch(Exception e) {
+						throw new BasicIdException("No employee with this ID");
+					}
+					return c;
+				}
 
 			   @PostMapping("/createEmployee")
 			    public String createEmployee(@RequestBody Employee employee) {
@@ -37,9 +41,9 @@ public class EmployeeRestController {
 			       return "Employee has been updated";
 			   }
 			    
-			   @DeleteMapping("/deleteEmployee/{id}")
-			   public String deleteEmployee(@PathVariable("id") int id) {
-			       employeeService.deleteEmployee(id);
+			   @DeleteMapping("/deleteEmployee/{eid}")
+			   public String deleteEmployee(@PathVariable("eid") int eid) {
+			       employeeService.deleteEmployee(eid);
 				return "Deleted";}
 			       
 			   @GetMapping("/findAllEmployees")
@@ -55,10 +59,11 @@ public class EmployeeRestController {
 				   return employees;  
 			   }
 			   
-			   @GetMapping("/findByename")
-			   public List<Employee>findByename(@PathVariable("ename")String name){
-				   List<Employee>employee=employeeService.findByename(name);
-				   return employee;
+			   // Exception Handling in controller level
+			   @ResponseStatus(value=HttpStatus.NOT_FOUND,
+					   reason="employee id not found")
+			   @ExceptionHandler({Exception.class})
+			   public void handleException(){
 				   
 			   }
 			      
